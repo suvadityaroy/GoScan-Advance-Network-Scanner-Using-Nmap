@@ -1,0 +1,16 @@
+func handleWebAppScanExecution(target string) {
+	showProgress("Starting Web Application Scan...")
+	showProgress(fmt.Sprintf("Target: %s", colorYellow(target)))
+	
+	if utils.IsDBAvailable() {
+		showProgress("Storing host data...")
+		model.AddHost(utils.Config.DB, target, "up", model.NEW.String())
+	}
+	
+	showProgress("Scanning web services...")
+	showLoadingAnimation("Analyzing web applications", 2*time.Second)
+	
+	cmdEnumerate([]string{"HTTP", "POLITE", target})
+	
+	showSuccess("Web application scan completed")
+}
